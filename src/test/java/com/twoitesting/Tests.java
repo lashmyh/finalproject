@@ -41,8 +41,8 @@ public class Tests extends BaseTest {
 
         int expectedDiscount = (int) Math.round((subtotal * discount) / 100.0);
 
-        System.out.println("Amount expected to be reduced by: " + discount + "%");
-        System.out.println("Amount reduced by: " + discountedAmount);
+        System.out.println("Amount expected to be reduced by: " + discount + "%" + "(£" + expectedDiscount + ")");
+        System.out.println("Amount reduced by: £" + discountedAmount);
 
         assertEquals(expectedDiscount, discountedAmount, "Incorrect amount discounted");
 

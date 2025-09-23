@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class CartPage {
 
@@ -41,10 +42,10 @@ public class CartPage {
     private WebElement checkoutButton;
 
     @FindBy(css = "a.woocommerce-remove-coupon")
-    private WebElement removeCoupon;
+    private List<WebElement> removeCouponButtons;
 
     @FindBy(css = "a.remove")
-    private WebElement removeItem;
+    private List<WebElement> removeItemButtons;
 
     @FindBy(css = ".cart-empty")
     private WebElement emptyCartMessage;
@@ -104,15 +105,6 @@ public class CartPage {
         return new MyAccountPage(driver);
     }
 
-    // Navigate to checkout page
-//    public CheckoutPage goToCheckoutPage() {
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-//        //Scroll input into view
-//        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", checkoutButton);
-//        wait.until(ExpectedConditions.elementToBeClickable(checkoutButton)).click();
-//        return new CheckoutPage(driver);
-//    }
-
     // Handle checkout button
     public CheckoutPage goToCheckoutPage() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -132,6 +124,52 @@ public class CartPage {
 
         return new CheckoutPage(driver);
     }
+
+    //Remove all existing coupons in the cart
+    public void removeAllCoupons() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        while (!removeCouponButtons.isEmpty()) { // while there are existing coupons
+            WebElement coupon = removeCouponButtons.get(0); //first coupon
+            // Scroll into view
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", coupon);
+            try {
+                wait.until(ExpectedConditions.elementToBeClickable(coupon)).click();
+            } catch (ElementClickInterceptedException e) {
+                // Fallback to JS click if blocked
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", coupon);
+            }
+            wait.until(ExpectedConditions.stalenessOf(coupon));
+            // Refresh list
+            PageFactory.initElements(driver, this);
+        }
+    }
+
+
+    // Remove all existing items from the cart
+    public void removeAllItems() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        while (!removeItemButtons.isEmpty()) {
+            WebElement item = removeItemButtons.get(0);
+            // Scroll into view
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", item);
+            try {
+                wait.until(ExpectedConditions.elementToBeClickable(item)).click();
+            } catch (ElementClickInterceptedException e) {
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", item);
+            }
+            wait.until(ExpectedConditions.stalenessOf(item));
+            // Refresh list
+            PageFactory.initElements(driver, this);
+        }
+    }
+
+
+    // Clear cart completely
+    public void clearCart() {
+        removeAllCoupons();
+        removeAllItems();
+    }
+
 
 
 

@@ -1,5 +1,6 @@
 package com.twoitesting.basetest;
 
+import com.twoitesting.pages.CartPage;
 import com.twoitesting.pages.LoginPage;
 import com.twoitesting.pages.MyAccountPage;
 import org.junit.jupiter.api.AfterEach;
@@ -38,6 +39,7 @@ public class BaseTest {
 
         driver.manage().window().maximize(); //maximise window
 
+
         // Go to login page
         driver.get(config.getProperty("base.url"));
 
@@ -52,6 +54,11 @@ public class BaseTest {
         if (!myAccountPage.isAt()) {
             throw new IllegalStateException("Login Failed. Testing has stopped.");
         }
+
+        // Clear cart of existing items and coupons
+        driver.get(config.getProperty("cart.url"));
+        CartPage cartPage = new CartPage(driver);
+        cartPage.clearCart();
     }
 
     @AfterEach
