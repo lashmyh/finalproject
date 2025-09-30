@@ -25,7 +25,10 @@ public class BaseTest {
             config.load(fis);
         }
         String browser = System.getProperty("browser", "chrome"); // defaults to chrome if no browser requested
-        if (browser == null) browser = "chrome";
+        if (browser == null) {
+            browser = "chrome";
+            System.out.println("No browser specified: using Chrome as default");
+        }
         browser = browser.trim().toLowerCase();
 
         switch(browser.toLowerCase()) {
@@ -63,7 +66,18 @@ public class BaseTest {
 
     @AfterEach
     void tearDown() {
-        driver.quit();
+
+        try {
+            // go to my account
+            driver.get(config.getProperty("base.url"));
+
+            // log out
+            myAccountPage.logout();
+        } catch (Exception e) {
+            System.out.println("Could not log out: " + e.getMessage());
+        } finally {
+            driver.quit();
+        }
 
     }
 

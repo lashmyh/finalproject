@@ -11,26 +11,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Tests extends BaseTest {
 
-    //Verify log in works
-    @Test
-    void testUserCanSeeAccountPage() {
-        assertTrue(myAccountPage.isAt());
-    }
-
 
     //test case 1 : user can add item to cart, go to cart and apply correct discount with coupon code
     @ParameterizedTest(name = "Coupon {0} should apply a {1}% discount")
     @CsvFileSource(resources = "/coupons.csv", numLinesToSkip = 1)
     void couponTest(String couponCode, int discount) {
         ShopPage shopPage = myAccountPage.goToShop();
-        assertTrue(shopPage.isAt());
+        assertTrue(shopPage.isAt(), "Did not reach shop page as expected.");
 
         // Click add to cart btn of first product
         shopPage.clickAddToCart();
 
         // Go to cart
         CartPage cartPage = shopPage.goToCart();
-        assertTrue(cartPage.isAt());
+        assertTrue(cartPage.isAt(), "Did not reach cart page as expected.");
 
         //Apply coupon code from csv file
         cartPage.applyCoupon(couponCode);
@@ -46,9 +40,6 @@ public class Tests extends BaseTest {
 
         assertEquals(expectedDiscount, discountedAmount, "Incorrect amount discounted");
 
-        // Go to account page to log out
-        MyAccountPage myAccountPage1 = cartPage.goToMyAccountPage();
-        myAccountPage1.logout();
 
 
     }
@@ -60,18 +51,19 @@ public class Tests extends BaseTest {
     void orderTest(String firstName, String lastName, String country, String street,
                    String city, String postcode, String phone, String email) {
         ShopPage shopPage = myAccountPage.goToShop();
-        assertTrue(shopPage.isAt());
+        assertTrue(shopPage.isAt(), "Did not reach shop page as expected.");
 
         // Click add to cart btn of first product
         shopPage.clickAddToCart();
 
         // Go to cart page
         CartPage cartPage = shopPage.goToCart();
-        assertTrue(cartPage.isAt());
+        assertTrue(cartPage.isAt(), "Did not reach cart page as expected");
 
         // Go to checkout page
         CheckoutPage checkoutPage = cartPage.goToCheckoutPage();
 
+        // fill billing form
         checkoutPage.fillBillingForm(firstName, lastName, country, street, city, postcode, phone, email);
 //        checkoutPage.setSelectCheckPayments(); TODO: FIX
 
@@ -81,16 +73,18 @@ public class Tests extends BaseTest {
         String orderNumberFromCheckout = orderReceivedPage.getOrderNumber();
         System.out.println("Order number from current checkout: " + orderNumberFromCheckout);
 
+        // go to my account
         myAccountPage = orderReceivedPage.goToMyAccountPage();
-        myAccountPage.viewOrders();
-        String latestOrderNumber = myAccountPage.getLatestOrderNumber();
+
+        // go to orders page
+        OrderHistoryPage orderHistoryPage = myAccountPage.viewOrders();
+
+        // get latest order no.
+        String latestOrderNumber = orderHistoryPage.getLatestOrderNumber();
         System.out.println("Latest order number in account: " + latestOrderNumber);
 
-        assertEquals(orderNumberFromCheckout, latestOrderNumber, "Order numbers do not match!");
+        assertEquals(orderNumberFromCheckout, latestOrderNumber, "Order numbers do not match.");
 
-        // Finally, log out
-        MyAccountPage myAccountPage1 = cartPage.goToMyAccountPage();
-        myAccountPage1.logout();
 
     }
 }

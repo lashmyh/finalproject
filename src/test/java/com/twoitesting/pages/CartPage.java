@@ -6,6 +6,8 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.List;
 
@@ -74,17 +76,20 @@ public class CartPage {
 
     }
 
-    // Get order subtotal
+    // Get order subtotal in pennies
     public int getSubtotal() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        //Wait until subtotal element is visible
         wait.until(ExpectedConditions.visibilityOf(subtotalElement));
 
-        String text = subtotalElement.getText(); // "e.g. £22.50"
+        String text = subtotalElement.getText(); // e.g. £22.50
         String numeric = text.replaceAll("[^0-9.]", ""); // "22.50"
-        double value = Double.parseDouble(numeric);
-        return (int) Math.round(value * 100); // 2250, in pennies
+
+        // Split into pounds and pennies safely
+        BigDecimal value = new BigDecimal(numeric);
+        BigDecimal pennies = value.movePointRight(2); // shift decimal 2 places = pennies
+        return pennies.intValueExact(); // throws if too big for int
     }
+
 
     // Get amount reduced by discount
     public int getDiscountValue() {

@@ -29,8 +29,6 @@ public class MyAccountPage {
     @FindBy(linkText = "Orders")
     private WebElement ordersLink;
 
-    @FindBy(css = "a[href*='view-order']")
-    private WebElement latestOrderLink;
 
     // Logged in status helper method
     public boolean isAt() {
@@ -60,22 +58,16 @@ public class MyAccountPage {
     }
 
     // Navigate to Orders option in account sidebar
-    public void viewOrders() {
+    public OrderHistoryPage viewOrders() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.elementToBeClickable(ordersLink));
         // Scroll it into view
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", ordersLink);
         ordersLink.click();
+        return new OrderHistoryPage(driver);
 
     }
 
-    // Get first entry from My Orders
-    public String getLatestOrderNumber() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOf(latestOrderLink));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", latestOrderLink);
-        return latestOrderLink.getText().replace("#", "").trim();
-    }
 
 
 
