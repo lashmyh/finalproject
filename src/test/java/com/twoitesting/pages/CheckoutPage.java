@@ -1,5 +1,6 @@
 package com.twoitesting.pages;
 
+import com.twoitesting.utils.Helpers;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -44,11 +45,8 @@ public class CheckoutPage {
     @FindBy(id = "billing_email")
     private WebElement emailInput; //check this
 
-    @FindBy(css = "label[for='payment_method_cheque']")
-    private WebElement checkPaymentsOption;
-
     @FindBy(id = "place_order")
-    private WebElement placeOrderBtn; //check this
+    private WebElement placeOrderBtn;
 
     public void fillBillingForm(String firstName, String lastName, String countryName, String streetName,
     String cityName,String postcode, String phoneNumber, String emailAddress) {
@@ -78,30 +76,17 @@ public class CheckoutPage {
         emailInput.sendKeys(emailAddress);
     }
 
-    public void setSelectCheckPayments() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOf(checkPaymentsOption));
-        // Scroll it into view
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", checkPaymentsOption);
-        checkPaymentsOption.click();
-    }
-
     // Avoided lazy loading for dynamic elements
     public OrderReceivedPage placeOrder() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement btn = Helpers.waitForElementToBeClickable(driver, placeOrderBtn, 10);
+        Helpers.scrollIntoView(driver, btn);
 
-        // Wait for loading overlay to be gone
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(
-                By.cssSelector("div.blockUI.blockOverlay")
-        ));
-
-        // Wait until place order button is clickable
-        WebElement placeOrderBtn = wait.until(
-                ExpectedConditions.elementToBeClickable(By.id("place_order"))
-        );
-
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", placeOrderBtn);
-        placeOrderBtn.click();
+        try {
+            btn.click();
+        } catch (ElementClickInterceptedException e) {
+            // Fallback to JS click
+            Helpers.javascriptClick(driver, btn);
+        }
 
         return new OrderReceivedPage(driver);
     }

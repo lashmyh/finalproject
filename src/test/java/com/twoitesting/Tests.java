@@ -16,20 +16,31 @@ public class Tests extends BaseTest {
     @ParameterizedTest(name = "Coupon {0} should apply a {1}% discount")
     @CsvFileSource(resources = "/coupons.csv", numLinesToSkip = 1)
     void couponTest(String couponCode, int discount) {
+        System.out.println("Going to Shop page...");
         ShopPage shopPage = myAccountPage.goToShop();
         assertTrue(shopPage.isAt(), "Did not reach shop page as expected.");
+        System.out.println("On shop page");
 
         // Click add to cart btn of first product
         shopPage.clickAddToCart();
+        System.out.println("Item added to cart");
+
 
         // Go to cart
+        System.out.println("Going to cart page...");
         CartPage cartPage = shopPage.goToCart();
         assertTrue(cartPage.isAt(), "Did not reach cart page as expected.");
+        System.out.println("On cart page...");
+
 
         //Apply coupon code from csv file
+        System.out.println("Applying coupon...");
         cartPage.applyCoupon(couponCode);
+        System.out.println("Coupon applied");
+
 
         //Validate discount
+        System.out.println("Validating coupon...");
         int subtotal = cartPage.getSubtotal();          // in pennies
         int discountedAmount = cartPage.getDiscountValue(); // in pennies
 
@@ -50,41 +61,54 @@ public class Tests extends BaseTest {
     @CsvFileSource(resources = "/billingData.csv", numLinesToSkip = 1)
     void orderTest(String firstName, String lastName, String country, String street,
                    String city, String postcode, String phone, String email) {
+        System.out.println("Going to shop page.....");
         ShopPage shopPage = myAccountPage.goToShop();
         assertTrue(shopPage.isAt(), "Did not reach shop page as expected.");
+        System.out.println("On Shop page");
 
         // Click add to cart btn of first product
         shopPage.clickAddToCart();
+        System.out.println("item added to cart");
 
         // Go to cart page
+        System.out.println("Going to cart page...");
         CartPage cartPage = shopPage.goToCart();
         assertTrue(cartPage.isAt(), "Did not reach cart page as expected");
+        System.out.println("On cart page");
 
         // Go to checkout page
+        System.out.println("Going to checkout page...");
         CheckoutPage checkoutPage = cartPage.goToCheckoutPage();
+        System.out.println("On checkout page...");
+
 
         // fill billing form
+        System.out.println("Filling in billing form...");
         checkoutPage.fillBillingForm(firstName, lastName, country, street, city, postcode, phone, email);
-//        checkoutPage.setSelectCheckPayments(); TODO: FIX
 
         //Go to order received page
         OrderReceivedPage orderReceivedPage = checkoutPage.placeOrder();
+        System.out.println("On order received page ");
 
         String orderNumberFromCheckout = orderReceivedPage.getOrderNumber();
         System.out.println("Order number from current checkout: " + orderNumberFromCheckout);
 
         // go to my account
         myAccountPage = orderReceivedPage.goToMyAccountPage();
+        System.out.println("On Account page");
+
 
         // go to orders page
         OrderHistoryPage orderHistoryPage = myAccountPage.viewOrders();
+        System.out.println("On Order History page");
+
 
         // get latest order no.
         String latestOrderNumber = orderHistoryPage.getLatestOrderNumber();
         System.out.println("Latest order number in account: " + latestOrderNumber);
 
         assertEquals(orderNumberFromCheckout, latestOrderNumber, "Order numbers do not match.");
-
+        System.out.println("Logging out...");
 
     }
 }

@@ -1,5 +1,6 @@
 package com.twoitesting.pages;
 
+import com.twoitesting.utils.Helpers;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -27,9 +28,10 @@ public class OrderHistoryPage {
 
     // Get first entry from My Orders
     public String getLatestOrderNumber() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOf(latestOrderLink));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", latestOrderLink);
-        return latestOrderLink.getText().replace("#", "").trim();
+        WebElement latestOrder = Helpers.waitForElementToBeVisible(driver, latestOrderLink, 10);
+        Helpers.scrollIntoView(driver, latestOrder);
+        // Get text and clean it
+        return latestOrder.getText().replace("#", "").trim();
     }
+
 }

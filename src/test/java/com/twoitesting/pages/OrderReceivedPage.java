@@ -1,5 +1,7 @@
 package com.twoitesting.pages;
 
+import com.twoitesting.utils.Helpers;
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -27,15 +29,22 @@ public class OrderReceivedPage {
 
     // Get order number of successful order
     public String getOrderNumber() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOf(orderNumber));
-        return orderNumber.getText();
+        WebElement order = Helpers.waitForElementToBeVisible(driver, orderNumber, 10);
+        Helpers.scrollIntoView(driver, order);
+        return order.getText();
     }
 
     // Navigate to account page
     public MyAccountPage goToMyAccountPage() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        wait.until(ExpectedConditions.elementToBeClickable(myAccountLink)).click();
+        WebElement accountLink = Helpers.waitForElementToBeClickable(driver, myAccountLink, 5);
+        Helpers.scrollIntoView(driver, accountLink);
+
+        try {
+            accountLink.click();
+        } catch (ElementClickInterceptedException e) {
+            Helpers.javascriptClick(driver, accountLink);
+        }
+
         return new MyAccountPage(driver);
     }
 }

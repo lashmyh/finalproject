@@ -10,6 +10,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.io.FileInputStream;
+import java.time.Duration;
 import java.util.Properties;
 
 public class BaseTest {
@@ -42,26 +43,36 @@ public class BaseTest {
 
         driver.manage().window().maximize(); //maximise window
 
-
         // Go to login page
+        System.out.println("Going to base URL...");
         driver.get(config.getProperty("base.url"));
 
         // Perform login
+        System.out.println("On login page");
         LoginPage loginPage = new LoginPage(driver);
         myAccountPage = loginPage.loginAs(
                 config.getProperty("username"),
                 config.getProperty("password")
         );
 
+
         // Check correctly logged in
         if (!myAccountPage.isAt()) {
             throw new IllegalStateException("Login Failed. Testing has stopped.");
         }
+        System.out.println("Logged in");
 
+        System.out.println("Going to cart page");
         // Clear cart of existing items and coupons
         driver.get(config.getProperty("cart.url"));
+
         CartPage cartPage = new CartPage(driver);
+        System.out.println("On cart page");
+
         cartPage.clearCart();
+        System.out.println("Cart cleared");
+        System.out.println("--------------------Base test passed -------------------");
+
     }
 
     @AfterEach

@@ -35,21 +35,21 @@ public class LoginPage {
 
     // Login helper methods
 
-    //action: set username
+    //set username
     public LoginPage setUsername(String username) {
         usernameField.clear();
         usernameField.sendKeys(username);
         return this;
     }
 
-    //action: set password
+    //set password
     public LoginPage setPassword(String password) {
         passwordField.clear();
         passwordField.sendKeys(password);
         return this;
     }
 
-    //action: submit login form
+    //submit login form
     public void submitForm() {
         submitButton.click();
     }
