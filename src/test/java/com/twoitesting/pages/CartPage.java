@@ -151,8 +151,6 @@ public class CartPage {
             new WebDriverWait(driver, Duration.ofSeconds(10))
                     .until(ExpectedConditions.stalenessOf(coupon));
 
-            // Refresh list
-            PageFactory.initElements(driver, this);
         }
     }
 
@@ -178,8 +176,6 @@ public class CartPage {
             new WebDriverWait(driver, Duration.ofSeconds(10))
                     .until(ExpectedConditions.stalenessOf(item));
 
-            // refresh list
-            PageFactory.initElements(driver, this);
         }
     }
 

@@ -46,6 +46,15 @@ public class ShopPage {
         } catch (ElementClickInterceptedException e) {
             Helpers.javascriptClick(driver, addBtn);
         }
+
+        // Wait until the cart count increases
+        By cartCountLocator = By.cssSelector("a.cart-contents .count");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(driver -> {
+            String text = driver.findElement(cartCountLocator).getText();
+            int count = Integer.parseInt(text.replaceAll("[^0-9]", ""));
+            return count > 0;
+        });
     }
 
     // Handle go to cart click
