@@ -64,7 +64,6 @@ public class CartPage {
         By applyCouponBtnLocator = By.name("apply_coupon");
 
         WebElement input = Helpers.waitForElementToBeClickable(driver, couponInputLocator, 10);
-//        Helpers.scrollIntoView(driver, input);
         input.clear();
         input.sendKeys(couponCode);
 
@@ -80,7 +79,6 @@ public class CartPage {
     // Get order subtotal in pennies
     public int getSubtotal() {
         WebElement subtotal = Helpers.waitForElementToBeVisible(driver, subtotalElement, 10);
-//        Helpers.scrollIntoView(driver, subtotal);
         String text = subtotal.getText(); // e.g. £22.50
         String numeric = text.replaceAll("[^0-9.]", ""); // "22.50"
 
@@ -94,7 +92,6 @@ public class CartPage {
     // Get amount reduced by discount
     public int getDiscountValue() {
         WebElement discount = Helpers.waitForElementToBeVisible(driver, discountedAmount, 10);
-//        Helpers.scrollIntoView(driver, discount);
         String text = discount.getText(); // "e.g. £22.50"
         String numeric = text.replaceAll("[^0-9.]", ""); // "22.50"
 
@@ -108,8 +105,6 @@ public class CartPage {
     public MyAccountPage goToMyAccountPage() {
         WebElement account = Helpers.waitForElementToBeClickable(driver, myAccountLink, 10);
 
-        // Scroll into view
-//        Helpers.scrollIntoView(driver, account);
         try {
             account.click();
         } catch (ElementClickInterceptedException e) {
@@ -124,7 +119,6 @@ public class CartPage {
     public CheckoutPage goToCheckoutPage() {
 
         WebElement checkout = Helpers.waitForElementToBeClickable(driver, checkoutButton, 10);
-//        Helpers.scrollIntoView(driver, checkout);
 
         try {
             checkout.click();
@@ -140,7 +134,6 @@ public class CartPage {
         while (!removeCouponButtons.isEmpty()) { // while there are existing coupons
             WebElement coupon = removeCouponButtons.get(0); // first coupon
             WebElement clickableCoupon = Helpers.waitForElementToBeClickable(driver, coupon, 10);
-//            Helpers.scrollIntoView(driver, clickableCoupon);
 
             try {
                 clickableCoupon.click();
@@ -164,7 +157,6 @@ public class CartPage {
             // Wait until item is clickable
             WebElement clickableItem = Helpers.waitForElementToBeClickable(driver, item, 10);
 
-//            Helpers.scrollIntoView(driver, clickableItem);
 
             try {
                 clickableItem.click();

@@ -28,7 +28,6 @@ public class ShopPage {
     public boolean isAt() {
         try {
             WebElement products = Helpers.waitForElementToBeVisible(driver, shopProducts, 5);
-//            Helpers.scrollIntoView(driver, products);
             return products.isDisplayed();
         } catch (TimeoutException e) {
             return false; // shop products div wasn't found, so not in shop
@@ -36,10 +35,12 @@ public class ShopPage {
     }
 
     // Handle add to cart click
-    public void clickAddToCart() {
-        By addToCartLocator = By.cssSelector("a.add_to_cart_button");
+
+    public void clickAddToCart(String productName) {
+        By addToCartLocator = By.cssSelector(
+                String.format("a.add_to_cart_button[aria-label*='Add “%s” to your cart']", productName)
+        );
         WebElement addBtn = Helpers.waitForElementToBeClickable(driver, addToCartLocator, 10);
-//        Helpers.scrollIntoView(driver, addBtn);
 
         try {
             addBtn.click();
@@ -61,7 +62,6 @@ public class ShopPage {
     public CartPage goToCart() {
         By cartBtnLocator = By.cssSelector("a.cart-contents");
         WebElement cartBtn = Helpers.waitForElementToBeClickable(driver, cartBtnLocator, 10);
-//        Helpers.scrollIntoView(driver, cartBtn);
 
         try {
             cartBtn.click();

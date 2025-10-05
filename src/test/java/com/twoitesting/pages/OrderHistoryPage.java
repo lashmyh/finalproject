@@ -29,7 +29,6 @@ public class OrderHistoryPage {
     // Get first entry from My Orders
     public String getLatestOrderNumber() {
         WebElement latestOrder = Helpers.waitForElementToBeVisible(driver, latestOrderLink, 10);
-//        Helpers.scrollIntoView(driver, latestOrder);
         // Get text and clean it
         return latestOrder.getText().replace("#", "").trim();
     }

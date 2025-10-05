@@ -2,6 +2,7 @@ package com.twoitesting;
 
 import com.twoitesting.basetest.BaseTest;
 import com.twoitesting.pages.*;
+import com.twoitesting.utils.Helpers;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,13 +23,14 @@ public class Tests extends BaseTest {
     @ParameterizedTest(name = "Coupon {0} should apply a {1}% discount")
     @CsvFileSource(resources = "/coupons.csv", numLinesToSkip = 1)
     void couponTest(String couponCode, int discount) {
+        String productName = "Beanie";
         Allure.step("Navigating to Shop page...");
         ShopPage shopPage = myAccountPage.goToShop();
         assertTrue(shopPage.isAt(), "Did not reach shop page as expected.");
 
         // Click add to cart btn of first product
         Allure.step("Adding first available item to cart...");
-        shopPage.clickAddToCart();
+        shopPage.clickAddToCart(productName);
 
 
         // Go to cart
@@ -66,18 +68,21 @@ public class Tests extends BaseTest {
     @CsvFileSource(resources = "/billingData.csv", numLinesToSkip = 1)
     void orderTest(String firstName, String lastName, String country, String street,
                    String city, String postcode, String phone, String email) {
+        String productName = "Beanie";
         Allure.step("Navigating to Shop page...");
         ShopPage shopPage = myAccountPage.goToShop();
         assertTrue(shopPage.isAt(), "Did not reach shop page as expected.");
 
         // Click add to cart btn of first product
         Allure.step("Adding first item to cart...");
-        shopPage.clickAddToCart();
+        shopPage.clickAddToCart(productName);
 
         // Go to cart page
         Allure.step("Navigating to Cart page...");
         CartPage cartPage = shopPage.goToCart();
         assertTrue(cartPage.isAt(), "Did not reach cart page as expected");
+        Helpers.captureScreenshot(driver, "On cart page");
+
 
         // Go to checkout page
         Allure.step("Proceeding to Checkout page...");
@@ -101,6 +106,8 @@ public class Tests extends BaseTest {
         // go to orders page
         Allure.step("Viewing order history...");
         OrderHistoryPage orderHistoryPage = myAccountPage.viewOrders();
+        Helpers.captureScreenshot(driver, "On orders page");
+
 
         // get latest order no.
         String latestOrderNumber = orderHistoryPage.getLatestOrderNumber();

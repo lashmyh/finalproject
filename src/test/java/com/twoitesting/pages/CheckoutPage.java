@@ -79,7 +79,6 @@ public class CheckoutPage {
     // Avoided lazy loading for dynamic elements
     public OrderReceivedPage placeOrder() {
         WebElement btn = Helpers.waitForElementToBeClickable(driver, placeOrderBtn, 10);
-//        Helpers.scrollIntoView(driver, btn);
 
         try {
             btn.click();

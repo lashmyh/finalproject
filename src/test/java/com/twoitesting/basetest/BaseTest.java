@@ -3,6 +3,7 @@ package com.twoitesting.basetest;
 import com.twoitesting.pages.CartPage;
 import com.twoitesting.pages.LoginPage;
 import com.twoitesting.pages.MyAccountPage;
+import com.twoitesting.utils.Helpers;
 import io.qameta.allure.Allure;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,6 +57,8 @@ public class BaseTest {
                 config.getProperty("username"),
                 config.getProperty("password")
         );
+
+        Helpers.captureScreenshot(driver, "After logging in");
 
 
         // Check correctly logged in

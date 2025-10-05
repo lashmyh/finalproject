@@ -44,8 +44,7 @@ public class MyAccountPage {
 
         By shopBtnLocator = By.linkText("Shop");
         WebElement shop = Helpers.waitForElementToBeClickable(driver, shopBtnLocator, 10);
-        // scroll into view
-//        Helpers.scrollIntoView(driver, shop);
+
         try {
             shop.click();
         } catch (ElementClickInterceptedException e) {
@@ -58,8 +57,7 @@ public class MyAccountPage {
     // Logout
     public void logout() {
         WebElement logout = Helpers.waitForElementToBeClickable(driver, logoutLink, 5);
-        // Scroll into view
-//        Helpers.scrollIntoView(driver, logout);
+
         try {
             logout.click();
         } catch (ElementClickInterceptedException e) {
@@ -71,8 +69,7 @@ public class MyAccountPage {
     // Navigate to Orders option in account sidebar
     public OrderHistoryPage viewOrders() {
         WebElement orders = Helpers.waitForElementToBeClickable(driver, ordersLink, 10);
-        // Scroll it into view
-//        Helpers.scrollIntoView(driver, orders);
+
         try {
             orders.click();
         } catch (ElementClickInterceptedException e) {

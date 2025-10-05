@@ -30,14 +30,12 @@ public class OrderReceivedPage {
     // Get order number of successful order
     public String getOrderNumber() {
         WebElement order = Helpers.waitForElementToBeVisible(driver, orderNumber, 10);
-//        Helpers.scrollIntoView(driver, order);
         return order.getText();
     }
 
     // Navigate to account page
     public MyAccountPage goToMyAccountPage() {
         WebElement accountLink = Helpers.waitForElementToBeClickable(driver, myAccountLink, 5);
-//        Helpers.scrollIntoView(driver, accountLink);
 
         try {
             accountLink.click();
