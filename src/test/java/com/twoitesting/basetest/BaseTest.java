@@ -3,6 +3,7 @@ package com.twoitesting.basetest;
 import com.twoitesting.pages.CartPage;
 import com.twoitesting.pages.LoginPage;
 import com.twoitesting.pages.MyAccountPage;
+import io.qameta.allure.Allure;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
@@ -22,13 +23,14 @@ public class BaseTest {
     @BeforeEach
     void setUp() throws Exception {
         // Load properties
+        Allure.step("Loading configuration properties...");
         try (FileInputStream fis = new FileInputStream("src/test/resources/config.properties")) {
             config.load(fis);
         }
         String browser = System.getProperty("browser", "chrome"); // defaults to chrome if no browser requested
         if (browser == null) {
             browser = "chrome";
-            System.out.println("No browser specified: using Chrome as default");
+            Allure.step("No browser specified, defaulting to Chrome");
         }
         browser = browser.trim().toLowerCase();
 
@@ -44,11 +46,11 @@ public class BaseTest {
         driver.manage().window().maximize(); //maximise window
 
         // Go to login page
-        System.out.println("Going to base URL...");
+        Allure.step("Navigating to base URL...");
         driver.get(config.getProperty("base.url"));
 
         // Perform login
-        System.out.println("On login page");
+        Allure.step("Logging in as test user...");
         LoginPage loginPage = new LoginPage(driver);
         myAccountPage = loginPage.loginAs(
                 config.getProperty("username"),
@@ -60,33 +62,33 @@ public class BaseTest {
         if (!myAccountPage.isAt()) {
             throw new IllegalStateException("Login Failed. Testing has stopped.");
         }
-        System.out.println("Logged in");
+        Allure.step("Login successful, navigating to Cart page...");
 
-        System.out.println("Going to cart page");
         // Clear cart of existing items and coupons
         driver.get(config.getProperty("cart.url"));
 
         CartPage cartPage = new CartPage(driver);
-        System.out.println("On cart page");
 
         cartPage.clearCart();
-        System.out.println("Cart cleared");
-        System.out.println("--------------------Base test passed -------------------");
-
+        Allure.step("Cart cleared successfully.");
     }
 
     @AfterEach
     void tearDown() {
-
+        Allure.step("Starting teardown process...");
         try {
             // go to my account
+            Allure.step("Navigating back to My Account page...");
             driver.get(config.getProperty("base.url"));
 
             // log out
+            Allure.step("Logging out...");
             myAccountPage.logout();
+            Allure.step("Logout successful.");
         } catch (Exception e) {
-            System.out.println("Could not log out: " + e.getMessage());
+            Allure.step("Could not log out: " + e.getMessage());
         } finally {
+            Allure.step("Closing browser...");
             driver.quit();
         }
 

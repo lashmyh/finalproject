@@ -11,10 +11,6 @@ import java.time.Duration;
 
 public class Helpers {
 
-    // manually scroll into view
-    public static void scrollIntoView(WebDriver driver, WebElement element) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", element);
-    }
 
     // click using javascript, in cases  where click() does not work
     public static void javascriptClick(WebDriver driver, WebElement element) {
@@ -27,7 +23,7 @@ public class Helpers {
         return wait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
-    // For dynamic elements
+    // For dynamic elements, using locator instead of element
     public static WebElement waitForElementToBeClickable(WebDriver driver, By locator, int timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutInSeconds));
         return wait.until(ExpectedConditions.elementToBeClickable(locator));
