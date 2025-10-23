@@ -1,5 +1,6 @@
 package com.twoitesting.scenarios;
 
+import com.twoitesting.data.Coupon;
 import com.twoitesting.pages.MyAccountPage;
 import io.qameta.allure.Allure;
 import org.openqa.selenium.WebDriver;
@@ -17,14 +18,14 @@ public class CouponScenario extends BaseScenario {
         goToCartFromShop(productName);
     }
 
-    public void applyCouponAndVerifyDiscount(String couponCode, int discount) {
-        Allure.step("Applying coupon: " + couponCode);
-        cartPage.applyCoupon(couponCode);
+    public void applyCouponAndVerifyDiscount(Coupon coupon) {
+        Allure.step("Applying coupon: " + coupon.getCode());
+        cartPage.applyCoupon(coupon.getCode());
 
         Allure.step("Verifying discount...");
         int subtotal = cartPage.getSubtotal();
         int discountedAmount = cartPage.getDiscountValue();
-        int expected = (int) Math.round(subtotal * discount / 100.0);
+        int expected = (int) Math.round(subtotal * coupon.getDiscount() / 100.0);
 
         Allure.addAttachment("Subtotal", String.valueOf(subtotal));
         Allure.addAttachment("Expected Discount", String.valueOf(expected));
@@ -33,3 +34,4 @@ public class CouponScenario extends BaseScenario {
         assertEquals(expected, discountedAmount, "Incorrect discount amount.");
     }
 }
+
